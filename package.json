@@ -1,0 +1,41 @@
+{
+  "name": "node_log_json_on_fatal",
+  "version": "0.1.0",
+  "description": "Output a JSON object when there is a fatal error for log watchers to catch",
+  "main": "index.js",
+  "dependencies": {
+    "nan": "^2.14.2",
+    "node-gyp": "^7.1.2",
+    "node-pre-gyp": "^0.16.0"
+  },
+  "devDependencies": {
+    "node-pre-gyp-github": "^1.4.3"
+  },
+  "scripts": {
+    "rebuild": "node-pre-gyp install --build-from-source",
+    "install": "node-pre-gyp install --fallback-to-build",
+    "test": "npm run rebuild && node test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JimPatterson/node_log_json_on_fatal.git"
+  },
+  "binary": {
+    "module_name": "node_log_json_on_fatal_native",
+    "module_path": "./build/Release",
+    "host": "https://github.com/JimPatterson/node_log_json_on_fatal/releases/download/",
+    "remote_path": "{version}"
+  },
+  "keywords": [
+    "nodejs",
+    "out-of-memory",
+    "OnFatalError",
+    "OnOOMError"
+  ],
+  "author": "Jim Patterson",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/JimPatterson/node_log_json_on_fatal/issues"
+  },
+  "homepage": "https://github.com/JimPatterson/node_log_json_on_fatal#readme"
+}
