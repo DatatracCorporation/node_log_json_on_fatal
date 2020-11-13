@@ -5,6 +5,11 @@ crashing with a fatal error.
 
 Prebuilt binaries are hosted in the Github release to simplify use.
 
+The package is setup with
+[`node-pre-gyp`](https://github.com/mapbox/node-pre-gyp) so if the
+needed binary exists in the Github releases, it will downloaded.  But if
+does not exist, it will be compiled locally.
+
 # Why?
 
 The default behavior for Node.js when encountering a fatal error is to
@@ -53,6 +58,30 @@ not be reflected in the output.
 # Thanks
 
 * Initial version based on
-  [trevnorris / node-ofe](https://github.com/trevnorris/node-ofe/).
+  [trevnorris](https://github.com/trevnorris) /
+  [node-ofe](https://github.com/trevnorris/node-ofe/).
 * Github Actions based on
-  [blueconic / node-oom-heapdump](https://github.com/blueconic/node-oom-heapdump).
+  [blueconic](https://github.com/blueconic) /
+  [node-oom-heapdump](https://github.com/blueconic/node-oom-heapdump).
+
+# Development
+
+This uses node-gyp for building, so you'll need the normal C++ build
+tools like `make` and a compiler.
+
+A basic build and test cycle can use invoked with:
+
+```shell
+npm run test
+```
+
+# Deployment
+
+In this repo, Github actions are setup to build the binaries for the
+common operating systems when a Github release is created. One of our
+projects is based on Alpine, so we build binaries for that manually and
+deployment them to Github releases using:
+
+```shell
+TODO
+```
