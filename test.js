@@ -31,10 +31,6 @@ function verifyFail(script) {
         throw new Error(`${script} wrong status:  status='${rslt.status}'`);
     }
 
-    if (rslt.stdout !== '') {
-        throw new Error(`${script} returned stdout: ${rslt.stdout}`);
-    }
-
     // ignore leadup to our output
     const marker = '\n<--- Fatal error in process --->\n';
 
