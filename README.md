@@ -3,7 +3,8 @@
 Node module that will log a JSON object to `stderr` if the process is
 crashing with a fatal error.
 
-Prebuilt binaries are hosted in the Github release to simplify use.
+Prebuilt binaries are hosted in the Github release to simplify use.  An
+alpine compatible version is included.
 
 The package is setup with
 [`node-pre-gyp`](https://github.com/mapbox/node-pre-gyp) so if the
@@ -78,10 +79,14 @@ npm run test
 # Deployment
 
 In this repo, Github actions are setup to build the binaries for the
-common operating systems when a Github release is created. One of our
-projects is based on Alpine, so we build binaries for that manually and
-deployment them to Github releases using:
+common operating systems when a Github release is created. So, the
+process for releasing a version is:
 
-```shell
-TODO
-```
+1. `git fetch`
+1. `git status`
+1. `vi CHANGELOG.md`
+1. `git add CHANGELOG.md`
+1. `npm version -f -m "Release new version" <new-version>`
+1. `git push && git push --tags`
+1. Create a release on github to build binaries
+1. `npm publish`

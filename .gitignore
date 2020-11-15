@@ -1,3 +1,11 @@
+# node workspace
 node_modules/
-build/
+/build/
+
+# npm workspace
+/.cache/
+/.config/
+/.npm/
+
+# vim workfiles
 *.swp

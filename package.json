@@ -1,6 +1,6 @@
 {
   "name": "node_log_json_on_fatal",
-  "version": "0.1.0",
+  "version": "0.0.0",
   "description": "Output a JSON object when there is a fatal error for log watchers to catch",
   "main": "index.js",
   "dependencies": {
@@ -8,9 +8,7 @@
     "node-gyp": "^7.1.2",
     "node-pre-gyp": "^0.16.0"
   },
-  "devDependencies": {
-    "node-pre-gyp-github": "^1.4.3"
-  },
+  "devDependencies": {},
   "scripts": {
     "rebuild": "node-pre-gyp install --build-from-source",
     "install": "node-pre-gyp install --fallback-to-build",
@@ -23,8 +21,8 @@
   "binary": {
     "module_name": "node_log_json_on_fatal_native",
     "module_path": "./build/Release",
-    "host": "https://github.com/JimPatterson/node_log_json_on_fatal/releases/download/",
-    "remote_path": "{version}"
+    "package_name": "{module_name}-v{version}-{node_abi}-{platform}-{libc}-{arch}.tar.gz",
+    "host": "https://github.com/JimPatterson/node_log_json_on_fatal/releases/download/{version}"
   },
   "keywords": [
     "nodejs",

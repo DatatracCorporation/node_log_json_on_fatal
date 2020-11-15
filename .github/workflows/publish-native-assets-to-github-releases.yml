@@ -8,19 +8,18 @@ on:
     types: [created]
 
 jobs:
-  augment-release:
+  standard_binaries:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        node-version: [10.x, 12.x, 14.x, 15.x]
-        #os: [ubuntu-latest, macos-latest, windows-latest]
-        os: [ubuntu-latest]
+        node: [10.x, 12.x, 14.x]
+        os: [ubuntu-latest, macos-latest, windows-latest]
     steps:
       - uses: actions/checkout@v2
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Use Node.js ${{ matrix.node }}
         uses: actions/setup-node@v1
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: ${{ matrix.node }}
       - name: patch node gyp on windows to support Visual Studio 2019
         if: matrix.os == 'windows-latest'
         shell: powershell
@@ -29,10 +28,28 @@ jobs:
           npm prefix -g | % {npm config set node_gyp "$_\node_modules\node-gyp\bin\node-gyp.js"}
       - name: build using node-pre-gyp
         run: |
-          npm install --build-from-source
+          npm ci --build-from-source
           ./node_modules/.bin/node-pre-gyp package
-      - name: Upload native binaries for Node ${{ matrix.node-version }} for ${{ matrix.os }}
-        env:
-          NODE_PRE_GYP_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload native binaries for Node ${{ matrix.node }} for ${{ matrix.os }}
+        uses: csexton/release-asset-action@v2
+        with:
+          pattern: "build/stage/*.tar.gz"
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          release-url: ${{ github.event.release.upload_url }}
+
+  alpine_binaries:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [10, 12, 14]
+    steps:
+      - uses: actions/checkout@v2
+      - name: build using node-pre-gyp in container
         run: |
-          ./node_modules/.bin/node-pre-gyp-github publish
+          ./alpine-build.sh ${{ matrix.node }}
+      - name: Upload native binaries for Node ${{ matrix.node }} for alpine linux
+        uses: csexton/release-asset-action@v2
+        with:
+          pattern: "build/stage/*.tar.gz"
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          release-url: ${{ github.event.release.upload_url }}
