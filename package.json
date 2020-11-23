@@ -1,6 +1,6 @@
 {
   "name": "node_log_json_on_fatal",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "description": "Output a JSON object when there is a fatal error for log watchers to catch",
   "main": "index.js",
   "dependencies": {
