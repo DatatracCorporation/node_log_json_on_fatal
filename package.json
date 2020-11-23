@@ -22,7 +22,7 @@
     "module_name": "node_log_json_on_fatal_native",
     "module_path": "./build/Release",
     "package_name": "{module_name}-v{version}-{node_abi}-{platform}-{libc}-{arch}.tar.gz",
-    "host": "https://github.com/JimPatterson/node_log_json_on_fatal/releases/download/{version}"
+    "host": "https://github.com/JimPatterson/node_log_json_on_fatal/releases/download/v{version}"
   },
   "keywords": [
     "nodejs",
