@@ -1,23 +1,43 @@
 #include <nan.h>
 #include <stdlib.h>
+#include <string.h>
 
 using namespace v8;
 
 
-Eternal<Uint8Array> leader;
-Eternal<Uint8Array> middle;
-Eternal<Uint8Array> trailer;
-bool msgFirst;
+struct Str {
+    size_t len;
+    void* data;
 
 
-static void printUint8Array(Eternal<Uint8Array>& str) {
+    void write() {
+        if (this->len) {
+            fwrite(this->data, 1, this->len, stderr);
+        }
+    };
+};
+
+
+static Str leader;
+static Str middle;
+static Str trailer;
+static bool msgFirst;
+
+
+static void saveStr(Isolate* curr,
+        const Local<Uint8Array>& str,
+        Str& out) {
     Nan::HandleScope scope;
-    Isolate* curr = Isolate::GetCurrent();
 
-    auto local = str.Get(curr);
-    Nan::TypedArrayContents<uint8_t> bytes(local);
+    Nan::TypedArrayContents<uint8_t> bytes(str);
 
-    fwrite(*bytes, 1, bytes.length(), stderr);
+    out.data = malloc(bytes.length());
+    if (out.data) {
+        out.len = bytes.length();
+        memcpy(out.data, *bytes, bytes.length());
+    } else {
+        out.len = 0;
+    }
 }
 
 
@@ -69,12 +89,15 @@ static void OnFatalError(const char* location, const char* message) {
     // Do as little as possible in here, we are already crashing...
     fprintf(stderr, "\n<--- Fatal error in process --->\n");
 
-    printUint8Array(leader);
+    leader.write();
     printMsgOrLoc(location, message, msgFirst);
-    printUint8Array(middle);
+    middle.write();
     printMsgOrLoc(location, message, !msgFirst);
-    printUint8Array(trailer);
+    trailer.write();
     fprintf(stderr, "\n");
+
+    // stderr is normally not buffered, but just in case
+    fflush(stderr);
 
     exit(1);
 }
@@ -105,9 +128,9 @@ NAN_METHOD(Register) {
     // save the parameters for later use
     Isolate* curr = Isolate::GetCurrent();
 
-    leader.Set(curr, info[0].As<Uint8Array>());
-    middle.Set(curr, info[1].As<Uint8Array>());
-    trailer.Set(curr, info[2].As<Uint8Array>());
+    saveStr(curr, info[0].As<Uint8Array>(), leader);
+    saveStr(curr, info[1].As<Uint8Array>(), middle);
+    saveStr(curr, info[2].As<Uint8Array>(), trailer);
     msgFirst = info[3].As<Boolean>()->Value();
 
     // register our handler
